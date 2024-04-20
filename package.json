@@ -1,10 +1,10 @@
 {
 	"name": "near-bos-webcomponent-livepeer",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"homepage": "https://github.com/bb-face/near-bos-webcomponent",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/petersalomonsen/near-bos-webcomponent.git"
+		"url": "https://github.com/bb-face/near-bos-webcomponent.git"
 	},
 	"files": [
 		"dist/",
