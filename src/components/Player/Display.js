@@ -1,27 +1,82 @@
-import React, {forwardRef} from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import * as Player from "@livepeer/react/player";
 import {
   MuteIcon,
   PauseIcon,
-	LoadingIcon,
+  LoadingIcon,
   PlayIcon,
   UnmuteIcon,
 } from "@livepeer/react/assets";
+import { getSrc } from "@livepeer/react/external";
 
 import { useStore } from "./state";
 import Settings from "./Settings";
 
+import { Livepeer } from "livepeer";
+
+const livepeerInstance = new Livepeer({
+  apiKey: process.env.REACT_APP_LIVEPEER_STUDIO_API_KEY,
+});
+
 const Display = (props) => {
-	const { src } = useStore();
+  const { src, setSrc, setPlaybackId, setError } = useStore();
 
-	if (!src) {
-		return <p>Loading</p>;
-	}
+  const [s, setS] = useState(null);
 
-	return (
-		<Player.Root src={src}>
-			<Player.Container>
-				<Player.Video title="Live stream" />
+  const { playbackId } = props;
+
+  const getPlaybackSource = async (playbackId, livepeer = livepeerInstance) => {
+    if (!livepeer) throw new Error("Livepeer instance not found");
+
+    try {
+      const playbackInfo = await livepeer.playback.get(playbackId);
+      // const a = "9bc9jzmv6rdt1gqr";
+      // const playbackInfo = await livepeer.playback.get(a);
+
+      const src = getSrc(playbackInfo.playbackInfo);
+
+      return src;
+    } catch (error) {
+      console.log("-- in error");
+      console.log(error);
+      setError(error.message);
+    }
+  };
+
+  const fetchSrc = async () => {
+    // const fetchedSrc = await getPlaybackSource(_, livepeer);
+    try {
+      const fetchedSrc = await getPlaybackSource(playbackId);
+      setSrc(fetchedSrc);
+      setS(fetchedSrc);
+    } catch (error) {
+      console.log("-- in error");
+      console.log(error);
+      setError(erorr.message);
+    }
+  };
+
+  useEffect(() => {
+    if (playbackId) {
+      setPlaybackId(playbackId);
+      fetchSrc();
+    }
+  }, [playbackId]);
+
+  if (!s) {
+    return <p>Loading</p>;
+  }
+
+  if (!playbackId) {
+    <button type="button" onClick={fetchSrc}>
+      get src
+    </button>;
+  }
+
+  return (
+    <Player.Root src={s}>
+      <Player.Container>
+        <Player.Video title="Live stream" />
 
         <Player.LoadingIndicator asChild>
           <Loading />
@@ -152,7 +207,7 @@ const Display = (props) => {
           />
         </Player.Controls>
 
-				{ /*
+        {/*
 <Player.Controls className="flex items-center justify-center">
 					<Player.PlayPauseTrigger className="w-10 h-10">
 						<Player.PlayingIndicator asChild matcher={false}>
@@ -163,92 +218,88 @@ const Display = (props) => {
 						</Player.PlayingIndicator>
 					</Player.PlayPauseTrigger>
 				</Player.Controls>
-					*/ }
-				
-			</Player.Container>
-		</Player.Root>
-	);
-}
+					*/}
+      </Player.Container>
+    </Player.Root>
+  );
+};
 
-const Seek = forwardRef(
-  ({ children, ...props }, forwardedRef) => (
-    <Player.Seek ref={forwardedRef} {...props}>
-      <Player.Track
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 0.7)",
-          position: "relative",
-          flexGrow: 1,
-          borderRadius: 9999,
-          height: 2,
-        }}
-      >
-        <Player.SeekBuffer
-          style={{
-            position: "absolute",
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            borderRadius: 9999,
-            height: "100%",
-          }}
-        />
-        <Player.Range
-          style={{
-            position: "absolute",
-            backgroundColor: "white",
-            borderRadius: 9999,
-            height: "100%",
-          }}
-        />
-      </Player.Track>
-      <Player.Thumb
-        style={{
-          display: "block",
-          width: 12,
-          height: 12,
-          backgroundColor: "white",
-          borderRadius: 9999,
-        }}
-      />
-    </Player.Seek>
-  ),
-);
-
-const Loading = forwardRef(({ children, ...props }, forwardedRef) => {
-    return (
-      <div
-        {...props}
+const Seek = forwardRef(({ children, ...props }, forwardedRef) => (
+  <Player.Seek ref={forwardedRef} {...props}>
+    <Player.Track
+      style={{
+        backgroundColor: "rgba(255, 255, 255, 0.7)",
+        position: "relative",
+        flexGrow: 1,
+        borderRadius: 9999,
+        height: 2,
+      }}
+    >
+      <Player.SeekBuffer
         style={{
           position: "absolute",
-          inset: 0,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 20,
-          backgroundColor: "black",
-          backdropFilter: "blur(10px)",
-          textAlign: "center",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          borderRadius: 9999,
+          height: "100%",
         }}
-        ref={forwardedRef}
+      />
+      <Player.Range
+        style={{
+          position: "absolute",
+          backgroundColor: "white",
+          borderRadius: 9999,
+          height: "100%",
+        }}
+      />
+    </Player.Track>
+    <Player.Thumb
+      style={{
+        display: "block",
+        width: 12,
+        height: 12,
+        backgroundColor: "white",
+        borderRadius: 9999,
+      }}
+    />
+  </Player.Seek>
+));
+
+const Loading = forwardRef(({ children, ...props }, forwardedRef) => {
+  return (
+    <div
+      {...props}
+      style={{
+        position: "absolute",
+        inset: 0,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 20,
+        backgroundColor: "black",
+        backdropFilter: "blur(10px)",
+        textAlign: "center",
+      }}
+      ref={forwardedRef}
+    >
+      <div
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+        }}
       >
-        <div
+        <LoadingIcon
           style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
+            width: "32px",
+            height: "32px",
+            animation: "spin infinite 1s linear",
           }}
-        >
-          <LoadingIcon
-            style={{
-              width: "32px",
-              height: "32px",
-              animation: "spin infinite 1s linear",
-            }}
-          />
-        </div>
+        />
       </div>
-    );
-  },
-);
+    </div>
+  );
+});
 
 export default Display;
