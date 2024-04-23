@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useStore } from "./state";
 
 function DirectUploadAsset() {
-  const { uploadLink } = useStore();
+  const { uploadLink, setError } = useStore();
 
   const [file, setFile] = useState(null);
 
@@ -14,7 +14,7 @@ function DirectUploadAsset() {
     // event.preventDefault();
 
     if (!file) {
-      alert("Please select a file first!");
+      setError("Please select a file first!");
       return;
     }
 
@@ -29,14 +29,11 @@ function DirectUploadAsset() {
 
       if (response.ok) {
         alert("Upload successful");
-        console.log("-- response upload");
-        console.log(response);
       } else {
-        alert("Upload failed");
+        setError("Upload failed");
       }
     } catch (error) {
-      console.error("Error uploading file:", error);
-      alert("Upload failed with an error");
+      setError(error.message);
     }
   };
 

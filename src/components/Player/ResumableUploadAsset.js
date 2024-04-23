@@ -9,10 +9,10 @@ const ResumableUploadAsset = () => {
 
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadUrl, setUploadUrl] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
 
   const handleFilesChange = async (event) => {
     const file = event.target.files[0];
+
     if (!file) return;
 
     const upload = new tus.Upload(file, {
@@ -24,15 +24,13 @@ const ResumableUploadAsset = () => {
       },
       uploadSize: file.size,
       onError: (err) => {
-        console.error("Error uploading file:", err);
-        setErrorMessage("Error uploading file: " + err);
+        setError("Error uploading file: " + err.message);
       },
       onProgress: (bytesUploaded, bytesTotal) => {
         const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
         setUploadProgress(percentage);
       },
       onSuccess: () => {
-        console.log("Upload finished:", upload.url);
         setUploadUrl(upload.url);
       },
     });
@@ -51,7 +49,6 @@ const ResumableUploadAsset = () => {
       <div>
         {uploadProgress > 0 && <p>Upload Progress: {uploadProgress}%</p>}
         {uploadUrl && <p>Upload finished! URL: {uploadUrl}</p>}
-        {errorMessage && <p>Error: {errorMessage}</p>}
       </div>
     </div>
   );

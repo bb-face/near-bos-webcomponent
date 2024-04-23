@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useStore } from "./state";
 import styled from "styled-components";
 
@@ -40,8 +40,20 @@ const Error = styled.textarea`
 `;
 
 function DebugState() {
-  const { src, playbackId, assetName, uploadUrl, resumableUploadUrl, error } =
-    useStore();
+  const {
+    src,
+    playbackId,
+    assetName,
+    uploadUrl,
+    resumableUploadUrl,
+    error,
+    setError,
+  } = useStore();
+
+  useEffect(() => {
+    if (!process.env.REACT_APP_LIVEPEER_STUDIO_API_KEY)
+      setError("Api key not found");
+  }, []);
 
   return (
     <DebugContainer>
@@ -54,11 +66,6 @@ function DebugState() {
         <Label>Playback Id:</Label>
         <Value>{playbackId}</Value>
       </DebugItem>
-      <div>
-        <label>1. Get source from livepeer studio</label>
-        <div>{src}</div>
-      </div>
-      <label>2. Create upload link</label>
       <DebugItem>
         <Label>Direct upload:</Label>
         <Value>{uploadUrl.substring(7, 17)}...</Value>

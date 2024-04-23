@@ -21,7 +21,7 @@ const livepeerInstance = new Livepeer({
 const Display = (props) => {
   const { src, setSrc, setPlaybackId, setError } = useStore();
 
-  const [s, setS] = useState(null);
+  const [s, setS] = useState();
 
   const { playbackId } = props;
 
@@ -37,8 +37,6 @@ const Display = (props) => {
 
       return src;
     } catch (error) {
-      console.log("-- in error");
-      console.log(error);
       setError(error.message);
     }
   };
@@ -50,11 +48,15 @@ const Display = (props) => {
       setSrc(fetchedSrc);
       setS(fetchedSrc);
     } catch (error) {
-      console.log("-- in error");
-      console.log(error);
       setError(erorr.message);
     }
   };
+
+  useEffect(() => {
+    if (src) {
+      setS(src);
+    }
+  }, [src]);
 
   useEffect(() => {
     if (playbackId) {
