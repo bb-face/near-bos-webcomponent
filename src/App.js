@@ -94,6 +94,9 @@ function App(props) {
           "Player.Debug": (props) => {
             return <VideoPlayer.Debug {...props} />;
           },
+          "Player.ApiKey": (props) => {
+            return <VideoPlayer.ApiKey {...props} />;
+          },
           Broadcast: (props) => {
             return <BroadcastComponent {...props} />;
           },
@@ -102,6 +105,12 @@ function App(props) {
           },
           "Broadcast.GenerateStream": (props) => {
             return <BroadcastComponent.GenerateStream {...props} />;
+          },
+          "Broadcast.Debug": (props) => {
+            return <BroadcastComponent.Debug {...props} />;
+          },
+          "Broadcast.ApiKey": (props) => {
+            return <BroadcastComponent.ApiKey {...props} />;
           },
         },
         features: {

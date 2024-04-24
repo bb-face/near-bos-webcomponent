@@ -3,15 +3,28 @@ import { Livepeer } from "livepeer";
 
 import { useStore } from "./state";
 
-const livepeerInstance = new Livepeer({
-  apiKey: process.env.REACT_APP_LIVEPEER_STUDIO_API_KEY,
-});
+function createLivepeerInstance(apiKey) {
+  const livepeerInstance = new Livepeer({
+    apiKey,
+  });
+
+  return livepeerInstance;
+}
 
 const GetUploadUrl = () => {
-  const { setAssetName, setPlaybackId, setResumableUploadUrl, setUploadUrl } =
-    useStore();
+  const {
+    setAssetName,
+    setPlaybackId,
+    setResumableUploadUrl,
+    setUploadUrl,
+    apiKey,
+  } = useStore();
 
   const [name, setName] = useState("");
+
+  const API_KEY = apiKey || process.env.REACT_APP_LIVEPEER_STUDIO_API_KEY;
+
+  const livepeerInstance = createLivepeerInstance(API_KEY);
 
   const handleSubmit = (event) => {
     event.preventDefault();

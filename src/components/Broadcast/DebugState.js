@@ -41,19 +41,9 @@ const Error = styled.textarea`
 `;
 
 function DebugState() {
-  const {
-    playbackId,
-    assetName,
-    uploadUrl,
-    resumableUploadUrl,
-    error,
-    setError,
-    apiKey,
-  } = useStore();
+  const { streamKey, error, setError, apiKey } = useStore();
 
   useEffect(() => {
-    console.log("-- here");
-    console.log(apiKey);
     if (!process.env.REACT_APP_LIVEPEER_STUDIO_API_KEY && !apiKey)
       setError("Api key not found");
     else setError("");
@@ -61,26 +51,14 @@ function DebugState() {
 
   return (
     <DebugContainer>
-      <h3>Player state debugger</h3>
+      <h3>Broadcast state debugger</h3>
       <DebugItem>
         <Label>Api key:</Label>
         <Value>{apiKey}</Value>
       </DebugItem>
       <DebugItem>
-        <Label>Asset name:</Label>
-        <Value>{assetName}</Value>
-      </DebugItem>
-      <DebugItem>
-        <Label>Playback Id:</Label>
-        <Value>{playbackId}</Value>
-      </DebugItem>
-      <DebugItem>
-        <Label>Direct upload:</Label>
-        <Value>{uploadUrl.substring(7, 17)}...</Value>
-      </DebugItem>
-      <DebugItem>
-        <Label>Resumable upload:</Label>
-        <Value>{resumableUploadUrl.substring(7, 17)}...</Value>
+        <Label>Stream key:</Label>
+        <Value>{streamKey}</Value>
       </DebugItem>
       <Error value={error}></Error>
     </DebugContainer>

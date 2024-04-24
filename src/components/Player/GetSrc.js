@@ -4,12 +4,20 @@ import { Livepeer } from "livepeer";
 
 import { useStore } from "./state";
 
-const livepeerInstance = new Livepeer({
-  apiKey: process.env.REACT_APP_LIVEPEER_STUDIO_API_KEY,
-});
+function createLivepeerInstance(apiKey) {
+  const livepeerInstance = new Livepeer({
+    apiKey,
+  });
+
+  return livepeerInstance;
+}
 
 const GetSrc = () => {
-  const { setSrc, setError, playbackId } = useStore();
+  const { setSrc, setError, playbackId, apiKey } = useStore();
+
+  const API_KEY = apiKey || process.env.REACT_APP_LIVEPEER_STUDIO_API_KEY;
+
+  const livepeerInstance = createLivepeerInstance(API_KEY);
 
   const getPlaybackSource = async (playbackId, livepeer = livepeerInstance) => {
     if (!livepeer) throw new Error("Livepeer instance not found");

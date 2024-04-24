@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { useStore } from "./state";
 
 const GenerateStream = () => {
-  const { setStreamKey } = useStore();
+  const { setStreamKey, setError, apiKey } = useStore();
+
+  const API_KEY = apiKey || process.env.REACT_APP_LIVEPEER_STUDIO_API_KEY;
 
   const [name, setName] = useState("");
 
@@ -13,7 +15,7 @@ const GenerateStream = () => {
       const response = await fetch("https://livepeer.studio/api/stream", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${process.env.REACT_APP_LIVEPEER_STUDIO_API_KEY}`,
+          Authorization: `Bearer ${API_KEY}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
@@ -22,14 +24,16 @@ const GenerateStream = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        setError("Network response was not ok");
+        return;
       }
 
       const data = await response.json();
       console.log("Stream created:", data);
+
       setStreamKey(data.streamKey);
     } catch (error) {
-      console.error("Error creating stream:", error);
+      setError(error.message);
     }
   };
 

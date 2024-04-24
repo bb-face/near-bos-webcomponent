@@ -15,4 +15,6 @@ export const useStore = create((set) => ({
   setResumableUploadUrl: (value) => set(() => ({ resumableUploadUrl: value })),
   error: "",
   setError: (value) => set(() => ({ error: value })),
+  apiKey: "",
+  setApiKey: (value) => set(() => ({ apiKey: value })),
 }));

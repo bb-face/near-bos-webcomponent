@@ -10,16 +10,25 @@ import {
 import { getSrc } from "@livepeer/react/external";
 
 import { useStore } from "./state";
+
 import Settings from "./Settings";
 
 import { Livepeer } from "livepeer";
 
-const livepeerInstance = new Livepeer({
-  apiKey: process.env.REACT_APP_LIVEPEER_STUDIO_API_KEY,
-});
+function createLivepeerInstance(apiKey) {
+  const livepeerInstance = new Livepeer({
+    apiKey,
+  });
+
+  return livepeerInstance;
+}
 
 const Display = (props) => {
-  const { src, setSrc, setPlaybackId, setError } = useStore();
+  const { src, setSrc, setPlaybackId, setError, apiKey } = useStore();
+
+  const API_KEY = apiKey || process.env.REACT_APP_LIVEPEER_STUDIO_API_KEY;
+
+  const livepeerInstance = createLivepeerInstance(API_KEY);
 
   const [s, setS] = useState();
 
