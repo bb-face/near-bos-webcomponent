@@ -52,8 +52,6 @@ function DebugState() {
   } = useStore();
 
   useEffect(() => {
-    console.log("-- here");
-    console.log(apiKey);
     if (!process.env.REACT_APP_LIVEPEER_STUDIO_API_KEY && !apiKey)
       setError("Api key not found");
     else setError("");
