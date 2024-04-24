@@ -6,6 +6,9 @@
 		"type": "git",
 		"url": "https://github.com/bb-face/near-bos-webcomponent.git"
 	},
+	"publishConfig": {
+		"access": "public"
+	},
 	"files": [
 		"dist/",
 		"README.md",
