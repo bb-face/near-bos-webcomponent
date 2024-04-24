@@ -8,7 +8,7 @@ const livepeerInstance = new Livepeer({
   apiKey: process.env.REACT_APP_LIVEPEER_STUDIO_API_KEY,
 });
 
-const GetPlaybackId = () => {
+const GetSrc = () => {
   const { setSrc, setError, playbackId } = useStore();
 
   const getPlaybackSource = async (playbackId, livepeer = livepeerInstance) => {
@@ -42,4 +42,4 @@ const GetPlaybackId = () => {
   );
 };
 
-export default GetPlaybackId;
+export default GetSrc;

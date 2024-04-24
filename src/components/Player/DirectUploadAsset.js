@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useStore } from "./state";
 
 function DirectUploadAsset() {
-  const { uploadLink, setError } = useStore();
+  const { uploadUrl, setError } = useStore();
 
   const [file, setFile] = useState(null);
 
@@ -19,7 +19,7 @@ function DirectUploadAsset() {
     }
 
     try {
-      const response = await fetch(uploadLink, {
+      const response = await fetch(uploadUrl, {
         method: "PUT",
         body: file,
         headers: {

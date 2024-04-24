@@ -79,8 +79,8 @@ function App(props) {
           "Player.Display": (props) => {
             return <VideoPlayer.Display {...props} />;
           },
-          "Player.GetPlaybackId": (props) => {
-            return <VideoPlayer.GetPlaybackId {...props} />;
+          "Player.GetSrc": (props) => {
+            return <VideoPlayer.GetSrc {...props} />;
           },
           "Player.GetUploadUrl": (props) => {
             return <VideoPlayer.GetUploadUrl {...props} />;
