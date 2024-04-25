@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useStore } from "./state";
 
-const ApiKey = () => {
-  const { setApiKey } = useStore();
+const ApiKey = (props) => {
+  const { apiKey, setApiKey } = useStore();
 
   const [apiKeyValue, setApiKeyValue] = useState("");
 
@@ -11,6 +11,14 @@ const ApiKey = () => {
     event.preventDefault();
     setApiKey(apiKeyValue);
   };
+
+  useEffect(() => {
+    if (!apiKey) setApiKey(props.apiKey);
+  }, [props.apiKey]);
+
+  if (props.automated) {
+    return <></>;
+  }
 
   return (
     <form onSubmit={handleSubmit}>
